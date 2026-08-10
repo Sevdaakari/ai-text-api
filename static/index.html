@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Text Toolkit</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <h1>AI Text Toolkit</h1>
+
+    <textarea id="inputText" placeholder="Paste your text here..."></textarea>
+
+    <div>
+        <button id="summarizeBtn">Summarize</button>
+        <button id="translateBtn">Translate to Azerbaijani</button>
+    </div>
+
+    <h3>Result:</h3>
+    <p id="result"></p>
+  <script>
+        const inputText = document.getElementById("inputText");
+        const resultBox = document.getElementById("result");
+
+        document.getElementById("summarizeBtn").addEventListener("click", async () => {
+            const response = await fetch("/summarize", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text: inputText.value })
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                resultBox.textContent = "Error: " + data.detail;
+            } else {
+                resultBox.textContent = data.summary;
+            }
+        });
+
+        document.getElementById("translateBtn").addEventListener("click", async () => {
+            const response = await fetch("/translate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text: inputText.value })
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                resultBox.textContent = "Error: " + data.detail;
+            } else {
+                resultBox.textContent = data.translation;
+            }
+        });
+        
+    </script>  
+</body>
+</html>
